@@ -1768,3 +1768,78 @@ java.net.URISyntaxException: Illegal character in path at index 16: file:/D:/Pro
 2022-07-22 18:34:23,021 [Worker-19: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
 2022-07-22 18:35:48,925 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2022-07-22 18:35:48,926 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 18:35:48,928 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 18:35:48,928 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:40:07,178 [Worker-0: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2022-07-22 19:42:48,415 [Worker-13: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:42:48,428 [Worker-13: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:42:48,432 [Worker-13: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:42:48,433 [Worker-13: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:45:04,787 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:45:04,788 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:45:04,793 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:45:04,794 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:46:19,459 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:46:19,459 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:46:19,461 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:46:19,462 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:46:44,656 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:46:44,657 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:46:44,659 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:46:44,660 [Worker-14: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:47:07,812 [Worker-9: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:07,813 [Worker-9: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:47:07,816 [Worker-9: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:07,816 [Worker-9: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:47:31,015 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:31,015 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:47:31,018 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:31,018 [Worker-16: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:47:46,507 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:46,508 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:47:46,512 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:47:46,513 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:50:10,368 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:50:10,368 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:50:10,402 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:50:10,403 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:50:56,518 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:50:56,518 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:50:56,522 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:50:56,522 [Worker-15: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:52:09,062 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:52:09,063 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:52:09,071 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:52:09,072 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:54:16,782 [Worker-26: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:16,783 [Worker-26: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:54:16,785 [Worker-26: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:16,786 [Worker-26: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:54:39,616 [Worker-23: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:39,617 [Worker-23: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:54:39,619 [Worker-23: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:39,619 [Worker-23: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:54:43,301 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:43,301 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:54:43,303 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:54:43,304 [Worker-25: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:55:10,394 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:10,395 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:55:10,398 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:10,398 [Worker-20: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:55:17,557 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:17,558 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:55:17,561 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:17,562 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:55:29,351 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:29,351 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:55:29,388 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:29,392 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:55:44,547 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:44,548 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:55:44,550 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:55:44,550 [Worker-24: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources
+2022-07-22 19:56:57,320 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:56:57,320 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\main\resources
+2022-07-22 19:56:57,334 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2022-07-22 19:56:57,335 [Worker-21: Building] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory C:\Testing\Frameworks\SeleniumBDDCucumber\CompleteCucumberDemoProject\src\test\resources

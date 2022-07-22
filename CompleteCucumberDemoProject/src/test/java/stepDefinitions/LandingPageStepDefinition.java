@@ -38,7 +38,7 @@ public class LandingPageStepDefinition {
 	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String shortName)
 			throws InterruptedException {
 		
-		LandingPage landingPage = new LandingPage(testContextSetup.driver);
+		LandingPage landingPage = testContextSetup.pageObjectManager.getLandingPage();
 		landingPage.searchItem(shortName);
 		
 		Thread.sleep(2000);

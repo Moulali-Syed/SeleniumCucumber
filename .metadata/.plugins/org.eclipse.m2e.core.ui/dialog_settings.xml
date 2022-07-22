@@ -25,12 +25,14 @@
 	</section>
 	<section name="Maven2ProjectWizardArchifactPage">
 		<list key="package">
+			<item value="CucumberFramework.CompleteCucumberDemoProject"/>
 			<item value="CucumberFramework.CucumberFramework"/>
 		</list>
 		<list key="groupId">
 			<item value="CucumberFramework"/>
 		</list>
 		<list key="artifactId">
+			<item value="CompleteCucumberDemoProject"/>
 			<item value="CucumberFramework"/>
 		</list>
 		<list key="projectNameTemplate">

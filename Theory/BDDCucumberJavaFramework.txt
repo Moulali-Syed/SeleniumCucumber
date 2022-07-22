@@ -1,0 +1,595 @@
+Complete BDD Cucumber [java] framework design:
+
+Step1: Create a Maven project 
+select maven-archetype-quickstart template , and provide groupId , artifactId 
+click on Finish a project will get created
+
+**************************************************************************************************************
+Step2: go to pom.xml
+remove junit dependencies
+go to maven repo - and add below 3 dependecies [for cucumber ,cucumber-java][to run tests - cucumber-testng] [for selenium - selenium-java ]
+
+search cucumber jvm java 
+<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
+<dependency>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-java</artifactId>
+    <version>7.4.1</version>
+</dependency>
+
+search cucumber jvm testng - dont add plain testng dependecy
+<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
+<dependency>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-testng</artifactId>
+    <version>7.4.1</version>
+</dependency>
+
+search selenium java 
+<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.1.4</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>5.2.1</version>
+</dependency>
+
+**************************************************************************************************************
+Step3: lets start automating a testcase - Search Product
+validate search results are consistent
+
+In cucumber all features are created in feature file
+Create a package inside src/test/java - features 
+inside features package - create a file searchProduct.feature
+
+inside the feature file , the first step to be written  is heading , highlighting what this feature file is all about
+Feature: Search and Place the order of products
+
+Then define different Scenario to be tested
+
+Scenario: Search Experience of Product search in both home and Offers page
+
+Then define the Given When Then
+Given - precondition , before the user perform any action
+When - the user action
+Then - validate the result
+
+Given User is on GreenCart Landing page
+
+Finally our searchProduct.feature file looks as below
+
+Feature: Search and Place the order of products
+
+
+Scenario: Search Experience of Product search in both home and Offers page
+Given User is on GreenCart Landing page
+When User searched with shortname "tom" and extracted actual name of product
+Then User searched for "tom" shortname in offers page 
+And validate product name in offers page matches with landing page 
+**************************************************************************************************************
+Step4: create cucumber step definition, features and Test Runner skeleton files
+
+inside src/test/java - create a package stepDefinitions
+inside this package , create a class - GreenKartStepDefinition
+
+inside src/test/java - create a new package - cucumberOptions
+create a class TestNGTestRunner
+
+package cucumberOptions;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(features="src/test/java/features",glue="stepDefinitions",monochrome=true,dryRun=true)
+
+public class TestNGTestRunner extends AbstractTestNGCucumberTests{
+
+}
+
+Now run the runner class , as we have given dryRun true it will show all the undefined step definition , and use them to create step definition methods
+**************************************************************************************************************
+Step5: now code the step definition file
+
+
+package stepDefinitions;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class GreenKartStepDefinition {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	public String offerPageProductName;
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+	}
+
+	@When("User searched with shortname {string} and extracted actual name of product")
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String string) throws InterruptedException {
+		driver.findElement(By.xpath("//input[@type='search']")).sendKeys("tom");
+		Thread.sleep(2000);
+		landingPageProductName = driver.findElement(By.cssSelector("h4.product-name")).getText().split("-")[0].trim();
+		System.out.println(landingPageProductName + " is extracted from homePage");
+	}
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+		driver.findElement(By.linkText("Top Deals")).click();
+		Set<String> s1 = driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		driver.switchTo().window(childWindow);
+
+		driver.findElement(By.xpath("//input[@type='search']")).sendKeys(shortName);
+		Thread.sleep(2000);
+		offerPageProductName = driver.findElement(By.cssSelector("tr td:nth-child(1)")).getText();
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, landingPageProductName);
+	}
+}
+
+remove the dryRun parameter from TestNGRunner 
+**************************************************************************************************************
+Real time problems in breaking the step definitions code into multiple files:
+
+Each page may so have so many functionalities , thus many stepDefinition files will be written
+if something goes wrong then it will be hard to maintain
+
+so divide the step definitions based on the web pages , so that activities we perform on the page have a corresponding step Definition
+
+Rename the above created stepDefinition to LandingPageStepDefinition
+
+create a OfferPageStepDefinition java class
+then remove all the code that belongs to OffersPage from the LandingPage stepDefinition file
+
+
+
+the 2 classes are divided with stepDefintion code of their respective pages
+
+public class LandingPageStepDefinition {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	public String offerPageProductName;
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+	}
+
+	@When("User searched with shortname {string} and extracted actual name of product")
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String string)
+			throws InterruptedException {
+		driver.findElement(By.xpath("//input[@type='search']")).sendKeys("tom");
+		Thread.sleep(2000);
+		landingPageProductName = driver.findElement(By.cssSelector("h4.product-name")).getText().split("-")[0].trim();
+		System.out.println(landingPageProductName + " is extracted from homePage");
+	}
+
+}
+
+public class OffersPageStepDefinition {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	public String offerPageProductName;
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+		driver.findElement(By.linkText("Top Deals")).click();
+		Set<String> s1 = driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		driver.switchTo().window(childWindow);
+
+		driver.findElement(By.xpath("//input[@type='search']")).sendKeys(shortName);
+		Thread.sleep(2000);
+		offerPageProductName = driver.findElement(By.cssSelector("tr td:nth-child(1)")).getText();
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, landingPageProductName);
+	}
+}
+
+Now when we try to run the Runner , in LandingPageStepDefinition this will run ,but in OffersPageStepDefinition there is no where
+driver intialized , so it will give a java.lang.NullPointerException: and also we need the landingPageProductName; value initialized 
+in LandingPageStepDefinition to be accessed in OffersPageStepDefinition
+
+Here comes need of dependency Injection
+
+**************************************************************************************************************
+What is Cucumber Dependency Injection? - use picocontainer
+
+There are  different ways , to do this for cucumber we need a dependency
+cucumber picocontainer
+
+<dependency>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-picocontainer</artifactId>
+    <version>7.4.1</version>
+</dependency>
+
+
+inside src/test/java - create a package utils 
+inside utils package , create a class TestContextSetup
+and we should tell in it what are the properties that we need to share among stepdefinition
+
+Then go to stepDefinition files and create a constructor with a TextContextSetup instance
+
+Whatever instances to be shared among stepDefintions , declare them in the TextContextSetup class
+Then in the stepDefinitions classes , create a constructor with parameter of TextContextSetup instance
+and declare an instance varibale of the TextContextSetup
+Then call the varibales that needs to shared using the TextContextSetup reference 
+
+step1:
+package utils;
+
+import org.openqa.selenium.WebDriver;
+
+public class TestContextSetup {
+
+	//tell what to be shared among stepDefinition files
+	public WebDriver driver;
+	public String landingPageProductName;
+}
+
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import utils.TestContextSetup;
+
+public class LandingPageStepDefinition {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	
+	
+	TestContextSetup testContextSetup; //----------------------------------------------------------------------------------Step2
+	public LandingPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	} //-------------------------------------------------------------------------------------------------------------------step2
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		WebDriverManager.chromedriver().setup();
+		testContextSetup.driver = new ChromeDriver();  //--------------------------------------------------------step3
+		testContextSetup.driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");  //--------------------------------------------------------step3
+	}
+
+	@When("User searched with shortname {string} and extracted actual name of product")
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String string)
+			throws InterruptedException {
+		testContextSetup.driver.findElement(By.xpath("//input[@type='search']")).sendKeys("tom");//--------------------------------------------------------step3
+		Thread.sleep(2000);
+		testContextSetup.landingPageProductName = testContextSetup.driver.findElement(By.cssSelector("h4.product-name")).getText().split("-")[0].trim();//--------------------------------------------------------step3
+		System.out.println(landingPageProductName + " is extracted from homePage");
+	}
+
+}
+
+public class OffersPageStepDefinition {
+
+	public String offerPageProductName;
+
+	public TestContextSetup testContextSetup;
+
+	public OffersPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+		testContextSetup.driver.findElement(By.linkText("Top Deals")).click();
+		Set<String> s1 = testContextSetup.driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		testContextSetup.driver.switchTo().window(childWindow);
+
+		testContextSetup.driver.findElement(By.xpath("//input[@type='search']")).sendKeys(shortName);
+		Thread.sleep(2000);
+		offerPageProductName = testContextSetup.driver.findElement(By.cssSelector("tr td:nth-child(1)")).getText();
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
+	}
+}
+
+**************************************************************************************************************
+Importance of Single responsibility principle and loosely coupled classes:
+
+Write classes lossely coupled, each class must have a single responsibility 
+
+
+in the below class we can see that the code to switch tabs is written in a step definition method, which makes it tightly coupled 
+our method should focus mainly on the validation or the main reason for that method
+
+
+public class OffersPageStepDefinition {
+
+	public String offerPageProductName;
+
+	public TestContextSetup testContextSetup;
+
+	public OffersPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+		testContextSetup.driver.findElement(By.linkText("Top Deals")).click();
+		Set<String> s1 = testContextSetup.driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		testContextSetup.driver.switchTo().window(childWindow);
+
+		testContextSetup.driver.findElement(By.xpath("//input[@type='search']")).sendKeys(shortName);
+		Thread.sleep(2000);
+		offerPageProductName = testContextSetup.driver.findElement(By.cssSelector("tr td:nth-child(1)")).getText();
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
+	}
+}
+
+we can change the class stepDefinitions as below
+thus following Single responsibility principle
+
+public class OffersPageStepDefinition {
+
+	public String offerPageProductName;
+
+	public TestContextSetup testContextSetup;
+
+	public OffersPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+
+		switchToOffersPage();
+		testContextSetup.driver.findElement(By.xpath("//input[@type='search']")).sendKeys(shortName);
+		Thread.sleep(2000);
+		offerPageProductName = testContextSetup.driver.findElement(By.cssSelector("tr td:nth-child(1)")).getText();
+	}
+
+	public void switchToOffersPage() {
+//we can also add code to validate , if we are on the same page we want or not
+		testContextSetup.driver.findElement(By.linkText("Top Deals")).click();
+		Set<String> s1 = testContextSetup.driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		testContextSetup.driver.switchTo().window(childWindow);
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
+	}
+}
+
+
+
+
+**************************************************************************************************************
+Page Object Patterns:
+
+All the element locators , should be not there in the test stepDefinitions , instead create seperate java classes 
+for each file , to have the web elements of the page
+
+create a package 
+pageObjects
+create class - LandingPage and OffersPage
+
+
+
+package pageObjects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LandingPage {
+	
+	public WebDriver driver;
+	public LandingPage(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	By search = By.xpath("//input[@type='search']");
+	By productName = By.cssSelector("h4.product-name");
+	By topDeals = By.linkText("Top Deals");
+	
+	public void searchItem(String name) {
+		driver.findElement(search).sendKeys(name);
+	}
+	
+	public String getProductName() {
+		return driver.findElement(productName).getText();
+	}
+	
+	public void selectTopDeals() {
+		driver.findElement(topDeals).click();
+	}
+}
+
+package pageObjects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class OffersPage {
+
+	public WebDriver driver;
+	
+	public OffersPage(WebDriver driver) {
+		this.driver = driver;
+	}
+	
+	By search = By.xpath("//input[@type='search']");
+	By productName = By.cssSelector("tr td:nth-child(1)");
+	
+	public void searchItem(String name) {
+		driver.findElement(search).sendKeys(name);
+	}
+	
+	public String getProductName() {
+		return driver.findElement(productName).getText();
+	}
+}
+
+package stepDefinitions;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import pageObjects.LandingPage;
+import utils.TestContextSetup;
+
+public class LandingPageStepDefinition {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	
+	
+	TestContextSetup testContextSetup;
+	public LandingPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		WebDriverManager.chromedriver().setup();
+		testContextSetup.driver = new ChromeDriver();
+		testContextSetup.driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+	}
+
+	@When("User searched with shortname {string} and extracted actual name of product")
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String shortName)
+			throws InterruptedException {
+		
+		LandingPage landingPage = new LandingPage(testContextSetup.driver);
+		landingPage.searchItem(shortName);
+		
+		Thread.sleep(2000);
+		testContextSetup.landingPageProductName = landingPage.getProductName().split("-")[0].trim();
+		System.out.println(landingPageProductName + " is extracted from homePage");
+	}
+
+}
+
+package stepDefinitions;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.testng.Assert;
+
+import io.cucumber.java.en.Then;
+import pageObjects.LandingPage;
+import pageObjects.OffersPage;
+import utils.TestContextSetup;
+
+public class OffersPageStepDefinition {
+
+	public String offerPageProductName;
+
+	public TestContextSetup testContextSetup;
+
+	public OffersPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Then("User searched for {string} shortname in offers page")
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+
+		switchToOffersPage();
+		OffersPage offersPage = new OffersPage(testContextSetup.driver);
+		offersPage.searchItem(shortName);;
+		Thread.sleep(2000);
+		offerPageProductName = offersPage.getProductName();
+	}
+
+	public void switchToOffersPage() {
+		LandingPage landingPage = new LandingPage(testContextSetup.driver);
+		landingPage.selectTopDeals();
+		Set<String> s1 = testContextSetup.driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		testContextSetup.driver.switchTo().window(childWindow);
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
+	}
+}
+
+
+
+
+
+
+**************************************************************************************************************
+

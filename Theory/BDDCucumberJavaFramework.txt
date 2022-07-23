@@ -1206,8 +1206,121 @@ public class LandingPage {
 }
 
 **************************************************************************************************************
+Implementing tagging and run all feature files together in parallel mode:
+
+provide tags in the feature file above the Scenario/Scenario Outline
+
+
+Feature: Place the order of products
+
+@PlaceOrder  <---------------------------------------------------------------------------------[1]
+Scenario Outline: Search Experience of Product search in both home and Offers page
+Given User is on GreenCart Landing page
+When User searched with shortname <Name> and extracted actual name of product
+And Added "3" items of the selected product to cart
+Then User proceeds to checkout and validate the <Name> items in checkout page
+And verify user has ability to enter promo code and place the order 
+
+Examples:
+| Name |
+| Tom  |
+
+in TestNGRunner provide the tag
+
+@CucumberOptions(features = "src/test/java/features", glue = "stepDefinitions", monochrome = true, tags = "@PlaceOrder")  <----------------------------------------[2]
+
+public class TestNGTestRunner extends AbstractTestNGCucumberTests {
+
+	// we are overriding the scenarios method of AbstractTestNGCucumberTests class
+	@Override
+	@DataProvider(parallel = true)
+	public Object[][] scenarios() {
+		return super.scenarios();
+	}
+}
+
+when we want to run more than one tag then use tags = "@PlaceOrder or @OffersPage"
+
+****************************************************************************************************************************************************************************************************************************
+Different types of reports cucumber framework can generate with examples:
+
+we have html,xml,json,junit,extent reports
+
+
+to generate html and json reports we can add the plugin  --------------[html , json]
+
+@CucumberOptions(features = "src/test/java/features", glue = "stepDefinitions", monochrome = true,
+tags = "@PlaceOrder or @OffersPage" , plugin= {"html:target/cucumber.html","json:target/cucumber.json"})
+
+public class TestNGTestRunner extends AbstractTestNGCucumberTests {
+
+	// we are overriding the scenarios method of AbstractTestNGCucumberTests class
+	@Override
+	@DataProvider(parallel = true)
+	public Object[][] scenarios() {
+		return super.scenarios();
+	}
+}
+
+run the TestNGTestRunner and refresh project
+we will get reports inside targets folder --- cucumber.html ,cucumber.json files generated reports
 
 
 **************************************************************************************************************
+How to generate Extent Spark html reports with in Cucumber Selenium Framework
+
+add the extent reports dependency , in pom.xml
+<dependency>
+    <groupId>com.aventstack</groupId>
+    <artifactId>extentreports</artifactId>
+    <version>5.0.9</version>
+</dependency>
+
+search extentreports cucumber7
+
+<dependency>
+    <groupId>tech.grasshopper</groupId>
+    <artifactId>extentreports-cucumber7-adapter</artifactId>
+    <version>1.7.0</version>
+</dependency>
+
+
+**************************************************************************************************************
+
+
+
+
+
+
+**************************************************************************************************************
+
+
+
+
+
+
+
+**************************************************************************************************************
+
+
+
+
+
+
+**************************************************************************************************************
+
+
+
+
+
+
+
+
+**************************************************************************************************************
+
+
+
+
+
 
 **************************************************************************************************************

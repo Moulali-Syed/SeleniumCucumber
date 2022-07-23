@@ -12,7 +12,7 @@ public class CheckoutPage {
 	}
 	
 	By cartBag = By.cssSelector("[alt='Cart']");
-	By checkOutButton = By.xpath("//button[contains(text(),'PROCEED TO CHECKOUT'])");
+	By checkOutButton = By.xpath("//button[contains(text(),'PROCEED TO CHECKOUT')]");
 	By promoBtn = By.cssSelector(".promoBtn");
 	By placeOrder = By.xpath("//button[contains(text(),'Place Order')]");
 	

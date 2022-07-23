@@ -16,4 +16,5 @@
     <fullyQualifiedTypeName name="org.openqa.selenium.WebDriver"/>
     <fullyQualifiedTypeName name="pageObjects.LandingPage"/>
     <fullyQualifiedTypeName name="pageObjects.PageObjectManager"/>
+    <fullyQualifiedTypeName name="java.util.Properties"/>
 </qualifiedTypeNameHistroy>

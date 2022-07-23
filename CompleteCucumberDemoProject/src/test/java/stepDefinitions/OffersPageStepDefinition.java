@@ -11,7 +11,7 @@ import pageObjects.LandingPage;
 import pageObjects.OffersPage;
 import pageObjects.PageObjectManager;
 import utils.TestContextSetup;
-
+/*
 public class OffersPageStepDefinition {
 
 	public String offerPageProductName;
@@ -37,11 +37,7 @@ public class OffersPageStepDefinition {
 		//use the object created inside the dependency manager
 		LandingPage landingPage = testContextSetup.pageObjectManager.getLandingPage();
 		landingPage.selectTopDeals();
-		Set<String> s1 = testContextSetup.driver.getWindowHandles();
-		Iterator<String> i1 = s1.iterator();
-		String parentWindow = i1.next();
-		String childWindow = i1.next();
-		testContextSetup.driver.switchTo().window(childWindow);
+		testContextSetup.genericUtils.switchWindowToChild();
 	}
 
 	@Then("validate product name in offers page matches with landing page")
@@ -49,3 +45,4 @@ public class OffersPageStepDefinition {
 		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
 	}
 }
+*/

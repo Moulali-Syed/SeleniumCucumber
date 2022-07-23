@@ -102,7 +102,6 @@ INDEX VERSION 1.131+C:\Testing\Frameworks\SeleniumBDDCucumber\.metadata\.plugins
 1784676256.index
 1725593568.index
 3552392777.index
-49627740.index
 2291724727.index
 3511495668.index
 3101210785.index

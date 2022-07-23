@@ -744,3 +744,470 @@ public class OffersPageStepDefinition {
 		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
 	}
 }
+****************************************************************************************************************************************************************************************************************************
+Build generic test utilities and pass driver in constructor from Context file:
+
+Driver initialization must be in a seperate file, as we need it in all stepDefinition file
+
+inside utils package, create a class TestBase
+
+
+public class TestBase {
+
+	public WebDriver driver;
+
+	public WebDriver WebDriverManager() {
+
+		if (driver == null) {
+
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+			driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+		}
+		return driver;
+	}
+}
+Then pass this above driver to TestContextSetup class
+
+public class TestContextSetup {
+
+	// tell what to be shared among stepDefinition files
+	public WebDriver driver;
+	public String landingPageProductName;
+	public PageObjectManager pageObjectManager;
+	public TestBase testBase;
+
+	public TestContextSetup() {
+		testBase = new TestBase();
+		pageObjectManager = new PageObjectManager(testBase.WebDriverManager());
+	}
+}
+
+
+Whatever the generic code , we can have them in seperate files , so that to be reused everywhere
+
+create a GenericUtils class in utils package
+
+public class GenericUtils {
+	
+	public WebDriver driver;
+	public GenericUtils(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	public void switchWindowToChild() {
+		Set<String> s1 = driver.getWindowHandles();
+		Iterator<String> i1 = s1.iterator();
+		String parentWindow = i1.next();
+		String childWindow = i1.next();
+		driver.switchTo().window(childWindow);
+	}
+}
+
+public class TestContextSetup {
+
+	// tell what to be shared among stepDefinition files
+	public WebDriver driver;
+	public String landingPageProductName;
+	public PageObjectManager pageObjectManager;
+	public TestBase testBase;
+	public GenericUtils genericUtils;//---<
+	
+	public TestContextSetup() {
+		testBase = new TestBase();
+		pageObjectManager = new PageObjectManager(testBase.WebDriverManager());
+		genericUtils = new GenericUtils(testBase.WebDriverManager());//<--------
+	}
+}
+
+now we can use this generic method in stepDefinition
+
+	public void switchToOffersPage() {
+		//use the object created inside the dependency manager
+		LandingPage landingPage = testContextSetup.pageObjectManager.getLandingPage();
+		landingPage.selectTopDeals();
+		testContextSetup.genericUtils.switchWindowToChild();//<----------------
+	}
+
+
+
+**************************************************************************************************************
+Create Global properties file , to drive browser and url
+
+create a package under src/test/ , resources
+create a file global.properties
+
+browser=chrome
+QAUrl=https://rahulshettyacademy.com/seleniumPractise/#/
+
+public class TestBase {
+
+	public WebDriver driver;
+
+	public WebDriver WebDriverManager() throws IOException {
+
+		FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"\\src\\test\\resources\\global.properties");
+		Properties properties = new Properties();
+		properties.load(fis);
+		String url = properties.getProperty("QAUrl");
+		
+		if (driver == null) {
+			if(properties.getProperty("browser").equalsIgnoreCase("chrome")) {
+				WebDriverManager.chromedriver().setup();
+				driver = new ChromeDriver();
+			}else if(properties.getProperty("browser")=="edge") {
+				WebDriverManager.edgedriver().setup();
+				driver = new EdgeDriver();
+			}
+			
+			driver.get(url);
+		}
+		return driver;
+	}
+}
+
+
+**************************************************************************************************************
+Implement Cucumber hooks , to add post condition steps to close browser:
+
+
+inside stepDefinitions  package create a class Hooks.java
+
+import java.io.IOException;
+import io.cucumber.java.After;
+import utils.TestContextSetup;
+
+public class Hooks {
+
+	TestContextSetup testContextSetup;
+
+	public Hooks(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+	// runs after each Scenario
+	@After
+	public void AfterScenario() throws IOException {
+		testContextSetup.testBase.WebDriverManager().quit();
+	}
+}
+
+**************************************************************************************************************
+Parameterize the selenium tests with multiple data sets using Scenario outline:
+
+change the Scenario to Scenario Outline , and use Examples keyword , with the name specifying in angular brackets
+
+Feature: Search and Place the order of products
+
+
+#Scenario: Search Experience of Product search in both home and Offers page
+#Given User is on GreenCart Landing page
+#When User searched with shortname "tom" and extracted actual name of product
+#Then User searched for "tom" shortname in offers page 
+#And validate product name in offers page matches with landing page
+
+
+
+Scenario Outline: Search Experience of Product search in both home and Offers page
+Given User is on GreenCart Landing page
+When User searched with shortname <Name> and extracted actual name of product
+Then User searched for <Name> shortname in offers page 
+And validate product name in offers page matches with landing page
+
+Examples:
+| Name |
+| Tom  |
+| Beet |
+
+Then make changes in the stepDefinition methods
+
+
+public class LandingPageStepDefinition2 {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	
+	
+	TestContextSetup testContextSetup;
+	public LandingPageStepDefinition2(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		
+	}
+
+	@When("^User searched with shortname (.+) and extracted actual name of product$") //<----------------------------------------
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String shortName)
+			throws InterruptedException {
+		
+		LandingPage landingPage = testContextSetup.pageObjectManager.getLandingPage();
+		landingPage.searchItem(shortName);
+		
+		Thread.sleep(4000);
+		testContextSetup.landingPageProductName = landingPage.getProductName().split("-")[0].trim();
+		System.out.println(testContextSetup.landingPageProductName + " is extracted from homePage");
+	}
+
+}
+
+
+
+public class OffersPageStepDefinition2 {
+
+	public String offerPageProductName;
+	public TestContextSetup testContextSetup;
+	public PageObjectManager pageObjectManager;
+	
+	public OffersPageStepDefinition2(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+	}
+
+	@Then("^User searched for (.+) shortname in offers page$")//<------------------------------
+	public void user_searched_for_same_shortname_in_offers_page(String shortName) throws InterruptedException {
+
+		switchToOffersPage();
+//		OffersPage offersPage = new OffersPage(testContextSetup.driver);
+		OffersPage offersPage = testContextSetup.pageObjectManager.getOffersPage();
+		offersPage.searchItem(shortName);;
+		Thread.sleep(4000);
+		offerPageProductName = offersPage.getProductName();
+	}
+
+	public void switchToOffersPage() {
+		//use the object created inside the dependency manager
+		LandingPage landingPage = testContextSetup.pageObjectManager.getLandingPage();
+		landingPage.selectTopDeals();
+		testContextSetup.genericUtils.switchWindowToChild();
+	}
+
+	@Then("validate product name in offers page matches with landing page")
+	public void validate_product_name_in_offers_page_mathces_with_landing_page() {
+		Assert.assertEquals(offerPageProductName, testContextSetup.landingPageProductName);
+	}
+}
+
+**************************************************************************************************************
+How to run Selenium Cucumber Scenarios parallely with TestNG runner annotations:
+
+modify the TestNGTestRunner class , to run the tests in parallel
+
+
+@CucumberOptions(features="src/test/java/features",glue="stepDefinitions",monochrome=true)
+
+public class TestNGTestRunner extends AbstractTestNGCucumberTests{
+
+	//we are overriding the scenarios method of AbstractTestNGCucumberTests class 
+	@Override
+	@DataProvider(parallel=true)
+	public Object[][] scenarios(){
+		return super.scenarios();
+	}
+}
+
+
+**************************************************************************************************************
+Assignment - Add new Selenium Feature file to place the product order:
+
+
+create a feature file , checkout.feature
+
+Feature: Place the order of products
+
+Scenario Outline: Search Experience of Product search in both home and Offers page
+Given User is on GreenCart Landing page
+When User searched with shortname <Name> and extracted actual name of product
+And Added "3" items of the selected product to cart
+Then User proceeds to checkout and validate the <Name> items in checkout page
+And verify user has ability to enter promo code and place the order 
+
+Examples:
+| Name |
+| Tom  |
+
+
+create the page classes , inside the pageObjects package
+create a class CheckoutPage
+
+public class CheckoutPage {
+
+	public WebDriver driver;
+	
+	public CheckoutPage(WebDriver driver) {
+		this.driver = driver;
+	}
+	
+	By cartBag = By.cssSelector("[alt='Cart']");
+	By checkOutButton = By.xpath("//button[contains(text(),'PROCEED TO CHECKOUT'])");
+	By promoBtn = By.cssSelector(".promoBtn");
+	By placeOrder = By.xpath("//button[contains(text(),'Place Order')]");
+	
+	public void CheckoutItems() {
+		driver.findElement(cartBag).click();
+		driver.findElement(checkOutButton).click();
+	}
+	
+	public boolean verifyPromoBtn() {
+		return driver.findElement(promoBtn).isDisplayed();
+	}
+	
+	public boolean verifyPlaceOrder() {
+		return driver.findElement(placeOrder).isDisplayed();
+	}
+}
+
+When ever we create a new Page
+create a object of it inside the PageObjectManager
+
+public class PageObjectManager {
+
+	// Factory Design Pattern : we will create objects of all the classes in this
+	// class , so called factory design pattern
+
+	public LandingPage landingPage;
+	public OffersPage offersPage;
+	public WebDriver driver;
+	public CheckoutPage checkoutPage;//<------------------
+
+	public PageObjectManager(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	public LandingPage getLandingPage() {
+		landingPage = new LandingPage(driver);
+		return landingPage;
+	}
+
+	public OffersPage getOffersPage() {
+		offersPage = new OffersPage(driver);
+		return offersPage;
+	}
+	
+	public CheckoutPage getCheckoutPage() {  //<------------------
+		checkoutPage = new CheckoutPage(driver);
+		return checkoutPage;
+	}
+}
+create stepDefinition file:
+
+public class CheckoutPageStepDefinition {
+
+	public WebDriver driver;
+	public CheckoutPage checkoutPage;
+	
+	TestContextSetup testContextSetup;
+	public CheckoutPageStepDefinition(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+		this.checkoutPage = testContextSetup.pageObjectManager.getCheckoutPage();
+
+	}
+
+	@Then("verify user has ability to enter promo code and place the order")
+	public void verify_user_has_ability_to_enter_promo_code_and_place_the_order() {
+		Assert.assertTrue(checkoutPage.verifyPromoBtn());
+		Assert.assertTrue(checkoutPage.verifyPlaceOrder());
+		
+	}
+	
+	@Then("^User proceeds to checkout and validate the (.+) items in checkout page$")
+	public void user_proceeds_checkout(String name) throws InterruptedException {
+		checkoutPage.CheckoutItems();
+		Thread.sleep(4000);
+		//Assertion to extract name from screen and compare with name
+	}
+
+}
+
+
+public class LandingPageStepDefinition2 {
+
+	public WebDriver driver;
+	public String landingPageProductName;
+	LandingPage landingPage;
+	
+	TestContextSetup testContextSetup;
+	public LandingPageStepDefinition2(TestContextSetup testContextSetup) {
+		this.testContextSetup = testContextSetup;
+		this.landingPage = testContextSetup.pageObjectManager.getLandingPage();
+	}
+
+	@Given("User is on GreenCart Landing page")
+	public void user_is_on_green_cart_landing_page() {
+
+		Assert.assertTrue(landingPage.getTitleLandingPage().contains("GreenKart"));
+	}
+
+	@When("^User searched with shortname (.+) and extracted actual name of product$")
+	public void user_searched_with_shortname_and_extracted_actual_name_of_product(String shortName)
+			throws InterruptedException {
+		
+
+		landingPage.searchItem(shortName);
+		
+		Thread.sleep(4000);
+		testContextSetup.landingPageProductName = landingPage.getProductName().split("-")[0].trim();
+		System.out.println(testContextSetup.landingPageProductName + " is extracted from homePage");
+	}
+
+	@When("Added {string} items of the selected product to cart")
+	public void added_items_of_selected_product_to_cart(String quantity) {
+		landingPage.incrementQuantity(Integer.parseInt(quantity));
+		landingPage.addToCart();
+	}
+}
+
+and also make changes in LandingPage , page class
+public class LandingPage {
+	
+	public WebDriver driver;
+	public LandingPage(WebDriver driver) {
+		this.driver = driver;
+	}
+
+	By search = By.xpath("//input[@type='search']");
+	By productName = By.cssSelector("h4.product-name");
+	By topDeals = By.linkText("Top Deals");
+	By increment = By.cssSelector("a.increment");
+	By addToCart = By.cssSelector(".product-action button");
+	
+	public void searchItem(String name) {
+		driver.findElement(search).sendKeys(name);
+	}
+	
+	public void getSearchText() {
+		driver.findElement(search).getText();
+	}
+	
+	public void incrementQuantity(int quantity) {
+		int i = quantity-1;
+		while(i>0) {
+			driver.findElement(increment).click();
+			i--;
+		}
+	}
+	public void addToCart() {
+		driver.findElement(addToCart).click();
+	}
+	
+	
+	public String getProductName() {
+		return driver.findElement(productName).getText();
+	}
+	
+	public void selectTopDeals() {
+		driver.findElement(topDeals).click();
+	}
+	
+	public String getTitleLandingPage() {
+		return driver.getTitle();
+	}
+	
+}
+
+**************************************************************************************************************
+
+
+**************************************************************************************************************
+
+**************************************************************************************************************

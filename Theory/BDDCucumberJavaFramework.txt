@@ -1269,6 +1269,7 @@ we will get reports inside targets folder --- cucumber.html ,cucumber.json files
 **************************************************************************************************************
 How to generate Extent Spark html reports with in Cucumber Selenium Framework
 
+step1: add dependency
 add the extent reports dependency , in pom.xml
 <dependency>
     <groupId>com.aventstack</groupId>
@@ -1276,7 +1277,7 @@ add the extent reports dependency , in pom.xml
     <version>5.0.9</version>
 </dependency>
 
-search extentreports cucumber7
+search extentreports cucumber7 , and add dependency because extent reports will not directly integrate with cucumber
 
 <dependency>
     <groupId>tech.grasshopper</groupId>
@@ -1284,27 +1285,155 @@ search extentreports cucumber7
     <version>1.7.0</version>
 </dependency>
 
+Step2: update the runner class
+in TestNGRunner class , add the plugin  "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
+
+@CucumberOptions(features = "src/test/java/features", glue = "stepDefinitions", monochrome = true, tags = "@PlaceOrder or @OffersPage", plugin = {
+		"html:target/cucumber.html", "json:target/cucumber.json",
+		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:" })
+public class TestNGTestRunner extends AbstractTestNGCucumberTests {
+
+	// we are overriding the scenarios method of AbstractTestNGCucumberTests class
+	@Override
+	@DataProvider(parallel = true)
+	public Object[][] scenarios() {
+		return super.scenarios();
+	}
+}
+
+
+Step3:
+inside src/test/resources - create a file extent.properties
+basefolder.name=test-output/ExtentReport
+basefolder.datetimepattern=d-MMM-YY HH-mm-ss
+extent.reporter.spark.start=true
+extent.reporter.spark.out=test-output/SparkReport/Spark.html
+
+
+line1: telling the reports folder path
+line2:giving a pattern for folder name , with time stamp
+line3:to generate report marking true
+line4:a sub folder inside the main folder where reports will be generated and present
+
+run project using testng runner class and refresh project
+ 
 
 **************************************************************************************************************
+Generate automatic screen shot on test failure with code implementation in hooks:
+
+for this we use hooks
+
+@Before, @After - related to scenario
+@AfterStep - related to each step of given when then
+
+step1:
+add the dependency , to convert File format to byte format use the dependency
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.11.0</version>
+</dependency>
+
+step2:
+	//we pass parameter Scenario , it has every information about the Scneario that is running
+	//it knows scenario name
+	@AfterStep
+	public void AddScreenshot(Scenario scenario) throws WebDriverException, IOException {
+		WebDriver driver = testContextSetup.testBase.WebDriverManager();
+		//executes only if any step is failed
+		if(scenario.isFailed()) {
+			//screenshot
+			File sourcePath = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+			byte[] fileContent = FileUtils.readFileToByteArray(sourcePath);
+			scenario.attach(fileContent, "image/png", "image");//1st argument - convert file format to byte format
+			//so use commons-io dependency 
+		}
+	}
+
+step3:
+inside src/test/resources - extent.properties file add below 2 lines
+for the screenshot path 
+screenshot.dir=test-output/SparkReport/screenshots
+screenshot.rel.path=./screenshots/
 
 
+now extent.properties look as below:
+
+basefolder.name=test-output/ExtentReport
+basefolder.datetimepattern=d-MMM-YY HH-mm-ss
+extent.reporter.spark.start=true
+extent.reporter.spark.out=test-output/SparkReport/Spark.html
+screenshot.dir=test-output/SparkReport/screenshots
+screenshot.rel.path=./screenshots/
+
+
+now run the testNGRunner class and refresh project and see in the test-output folder for the screenshots and the extentreports also has screenshot get
+attached
+**************************************************************************************************************
+How to rerun failed test scenarios with cucumber plugins
+
+step1:
+add  a plugin to testng runner class
+
+"rerun:target/failed_scenarios.txt"
+step2:
+run project and refresh , u will get a .txt file inside target folder
+step3:
+create a testng runner class and change the path of features
+features = "@target/failed_scenarios.txt"
+
+the testng runner class will be as below:
+import org.testng.annotations.DataProvider;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(features = "@target/failed_scenarios.txt", glue = "stepDefinitions", monochrome = true, plugin = {
+		"html:target/cucumber.html", "json:target/cucumber.json",
+		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"})
+public class FailedTestRunner extends AbstractTestNGCucumberTests {
+
+	// we are overriding the scenarios method of AbstractTestNGCucumberTests class
+	@Override
+	@DataProvider(parallel = true)
+	public Object[][] scenarios() {
+		return super.scenarios();
+	}
+}
 
 
 
 
 **************************************************************************************************************
+Running the cucumber selenium feature files from command line:
+
+From eclipse:
+
+right click on project --> run as ---> go to run configurations ----> select maven build 
+----> click on +  icon [new launch configuration]----> u will get a new window opened --->
+
+give the project path[pom.xml must be at project level] , give the goals as test
+click on Run
 
 
+From command line:
+go to project path 
+cd projectPath
 
+give maven goal
+mvn test
 
+*********************************
+we can override the existing cucumber options from command line
+any parameter we are passing in maven must start with -D
 
+run scenarios that are tagged with @PlaceOrder
+mvn test -Dcucumber.filter.tags="@PlaceOrder"
 
+run based on feature file path
+mvn test -Dcucumber.features="/Users/../checkout.feature"
 
-**************************************************************************************************************
-
-
-
-
+************************cucumber website documentation - cucumber.io/docs/cucumber/api/#options *********************************
 
 
 **************************************************************************************************************

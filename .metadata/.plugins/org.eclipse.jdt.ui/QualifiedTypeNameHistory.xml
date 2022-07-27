@@ -26,4 +26,4 @@
     <fullyQualifiedTypeName name="org.openqa.selenium.OutputType"/>
     <fullyQualifiedTypeName name="java.io.File"/>
     <fullyQualifiedTypeName name="org.apache.commons.io.FileUtils"/>
-</qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName n

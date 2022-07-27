@@ -1523,17 +1523,121 @@ click on BuildNow
 then check in console output what happened
 
 **************************************************************************************************************
+How to create  parameterized jenkins job to pass the values dynamically into tests
+
+go to configure --> select the general --> select this project is parameterized --> add parameter
+-->choose choice parameter --> give name and choices
+
+name : browser
+choices: chrome
+	   firefox
+
+add parameter
+Name: tags
+choices : PlaceOrder
+	    OffersPage
 
 
 
+go to build environment
+goals: test -Dcucumber.filter.tags="@"$tags"" -Dbrowser="$browser"
+
+save the project
+
+now build will be changed to Build with parameters
+select the tags and click on Build
+
+**************************************************************************************************************
+We can also run jenkins job periodically:
+go to source code management by clicking configure of job
+Build Triggers
+select build periodically
+0 8 * * *
 
 
+minutes hours daymonth month dayweek
+(0-59)  (0-23)  (1-31)  (1-12) (0-7) 
 
+in 0-7 , 0 and 7 are sunday
+
+
+**************************************************************************************************************
+How to run the end to end selenium cucumber framework with Junit Test Runner:
+
+copy the existing project and only chnage we make is in testRunner
+
+go to pom.xml remove testng dependency , add junit dependency
+
+<dependency>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-junit</artifactId>
+    <version>7.2.3</version>
+</dependency>
+
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.13.2</version>
+</dependency>
+
+
+now create JunitTestRunnerTest.java
+we must have the runner file name ending with Test , so that we can run through jenkins , it is compulsory when using junit
+
+
+package cucumberOptions;
+
+import org.junit.runner.RunWith;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(features = "src/test/java/features", glue = "stepDefinitions", monochrome = true, tags = "@PlaceOrder or @OffersPage", plugin = {
+		"html:target/cucumber.html", "json:target/cucumber.json",
+		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:", "rerun:target/failed_scenarios.txt" })
+public class JunitTestRunnerTest {
+
+}
 
 
 **************************************************************************************************************
 
+How to run tests parallely with junit test runner and how different from testNg:
+
+With testng runner we can run parallely , but with junit runner we cannot run , but we can run thru pom.xml 
+
+cucumber.io/docs/guides/parallel-execution
+
+go to this link - https://cucumber.io/docs/guides/parallel-execution/?lang=java#junit-4
+and add the surefire plugin configuration
+
+    <configuration>
+        <parallel>methods</parallel>
+        <useUnlimitedThreads>true</useUnlimitedThreads>
+    </configuration>
 
 
+add the plugin
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M5</version>
+					<configuration>
+						<parallel>methods</parallel>
+						<useUnlimitedThreads>true</useUnlimitedThreads>
+					</configuration>
+				</plugin>
+
+in testng we can run all the scenarios parallely , but junit runs only feature files parallely
+
+change the compiler version to 16
+
+if any lombok error change the compiler version
+
+<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>16</maven.compiler.source>
+		<maven.compiler.target>16</maven.compiler.target>
+	</properties> 
 
 **************************************************************************************************************

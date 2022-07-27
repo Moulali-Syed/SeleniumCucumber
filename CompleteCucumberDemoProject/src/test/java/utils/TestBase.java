@@ -16,20 +16,26 @@ public class TestBase {
 
 	public WebDriver WebDriverManager() throws IOException {
 
-		FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"\\src\\test\\resources\\global.properties");
+		FileInputStream fis = new FileInputStream(
+				System.getProperty("user.dir") + "\\src\\test\\resources\\global.properties");
 		Properties properties = new Properties();
 		properties.load(fis);
 		String url = properties.getProperty("QAUrl");
+		String browser_properties = properties.getProperty("browser");
+		String browser_maven = System.getProperty("browser");//reads from commandline
+		
+		//use ternary operator
+		String browser = browser_maven != null ? browser_maven : browser_properties;
 		
 		if (driver == null) {
-			if(properties.getProperty("browser").equalsIgnoreCase("chrome")) {
+			if (browser.equalsIgnoreCase("chrome")) {
 				WebDriverManager.chromedriver().setup();
 				driver = new ChromeDriver();
-			}else if(properties.getProperty("browser")=="edge") {
+			} else if (browser.equalsIgnoreCase("edge")) {
 				WebDriverManager.edgedriver().setup();
 				driver = new EdgeDriver();
 			}
-			
+
 			driver.get(url);
 		}
 		return driver;

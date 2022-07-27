@@ -1404,7 +1404,7 @@ public class FailedTestRunner extends AbstractTestNGCucumberTests {
 
 
 
-**************************************************************************************************************
+****************************************************************************************************************************************************************************************************************************
 Running the cucumber selenium feature files from command line:
 
 From eclipse:
@@ -1437,6 +1437,92 @@ mvn test -Dcucumber.features="/Users/../checkout.feature"
 
 
 **************************************************************************************************************
+How to pass global properties values through command line to cucumber framework:
+
+we can also control the browser from the commandline
+
+
+modify TestBase as below
+package utils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class TestBase {
+
+	public WebDriver driver;
+
+	public WebDriver WebDriverManager() throws IOException {
+
+		FileInputStream fis = new FileInputStream(
+				System.getProperty("user.dir") + "\\src\\test\\resources\\global.properties");
+		Properties properties = new Properties();
+		properties.load(fis);
+		String url = properties.getProperty("QAUrl");
+		String browser_properties = properties.getProperty("browser");
+		String browser_maven = System.getProperty("browser");//reads from commandline
+		
+		//use ternary operator
+		String browser = browser_maven != null ? browser_maven : browser_properties;
+		
+		if (driver == null) {
+			if (browser.equalsIgnoreCase("chrome")) {
+				WebDriverManager.chromedriver().setup();
+				driver = new ChromeDriver();
+			} else if (browser.equalsIgnoreCase("edge")) {
+				WebDriverManager.edgedriver().setup();
+				driver = new EdgeDriver();
+			}
+
+			driver.get(url);
+		}
+		return driver;
+	}
+}
+
+
+and thru command line use maven command
+
+mvn test -Dbrowser=edge
+
+**************************************************************************************************************
+Jenkins:
+download jenkins.war file
+go to the jenkins path in command prompt
+
+use the command
+java -jar jenkins.war -httpPort=8080
+
+and click on enter
+
+go to localhost:8080 in browser
+set username password
+
+**************************************************************************************************************
+
+create new jenkins job
+
+create a new item -- give a name -- select freestyle project
+if project is in github , give the git url in the source code management tab
+if it is in local , select advanced --> use custom workspace --> provide the project directory path
+
+Build tab
+Invoke top level maven targets 
+give the goals: test -Dcucumber.filter.tags="@PlaceOrder"
+save 
+
+click on BuildNow
+
+then check in console output what happened
+
+**************************************************************************************************************
 
 
 
@@ -1446,8 +1532,6 @@ mvn test -Dcucumber.features="/Users/../checkout.feature"
 
 
 **************************************************************************************************************
-
-
 
 
 
